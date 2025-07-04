@@ -69,4 +69,4 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 ## Contact
 
-For questions or feedback, feel free to reach out via [GitHub Issues](https://github.com/ibrahimemiraydin/color-picker-extension/issues) or contact me at [emiraydin.me].
+For questions or feedback, feel free to reach out via [GitHub Issues](https://github.com/ibrahimemiraydin/color-picker-extension/issues) or contact me at [Emir Aydın](https://emiraydin.me/contact)
