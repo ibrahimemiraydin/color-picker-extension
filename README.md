@@ -1,5 +1,6 @@
 🎨 Color Picker Extension
 
+(https://github.com/ibrahimemiraydin/color-picker-extension/blob/main/images/color-picker-extension.png?raw=true)
 
 Basit ve kullanışlı bir renk seçici tarayıcı uzantısı.
 Farklı renk formatlarında (HEX, RGB, HSL, CMYK, HWB, LAB, XYZ) renk kodlarını görüntüleyebilir ve kolayca kopyalayabilirsiniz.
