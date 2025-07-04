@@ -1,15 +1,56 @@
-let currentColor = { hex: '#FFFFFF', rgb: { r: 255, g: 255, b: 255 } }; // Önbellek
+let currentColor = { hex: '#FFFFFF', rgb: { r: 255, g: 255, b: 255 } };
 let isMinimized = false;
-let colorHistory = []; // Renk geçmişi dizisi
+let colorHistory = [];
+let currentLanguage = 'en'; // Varsayılan dil (desteklenmeyen diller için)
 
-// Uzantı yüklendiğinde renk geçmişini al
+// Dil değiştirme ve çeviri fonksiyonu
+function updateLanguage(lang) {
+  currentLanguage = lang;
+  document.querySelectorAll('[data-i18n]').forEach(element => {
+    const key = element.getAttribute('data-i18n');
+    element.textContent = translations[lang][key];
+  });
+  document.querySelectorAll('[data-i18n-title]').forEach(element => {
+    const key = element.getAttribute('data-i18n-title');
+    element.setAttribute('title', translations[lang][key]);
+  });
+  document.querySelectorAll('[data-i18n-aria]').forEach(element => {
+    const key = element.getAttribute('data-i18n-aria');
+    element.setAttribute('aria-label', translations[lang][key]);
+  });
+  document.documentElement.lang = lang;
+  document.querySelector('#languageSelect').value = lang;
+  chrome.storage.local.set({ language: lang }, () => {
+    console.log(`Dil kaydedildi: ${lang}`);
+  });
+}
+
+// Uzantı yüklendiğinde
 document.addEventListener('DOMContentLoaded', () => {
+  // Otomatik dil algılama
+  const browserLang = navigator.language.split('-')[0]; // Örneğin: tr-TR → tr
+  const supportedLangs = ['tr', 'en'];
+  const defaultLang = supportedLangs.includes(browserLang) ? browserLang : 'en';
+  
+  // Dil yükle
+  chrome.storage.local.get(['language'], (result) => {
+    currentLanguage = result.language || defaultLang;
+    updateLanguage(currentLanguage);
+  });
+  
+  // Renk geçmişi yükle
   chrome.storage.local.get(['colorHistory'], (result) => {
     if (result.colorHistory) {
       colorHistory = result.colorHistory;
       updateHistoryGrid();
     }
     console.log('Renk geçmişi yüklendi:', colorHistory);
+  });
+  
+  // Dil değiştirme olay dinleyicisi
+  document.getElementById('languageSelect').addEventListener('change', (event) => {
+    const newLang = event.target.value;
+    updateLanguage(newLang);
   });
 });
 
@@ -18,7 +59,7 @@ document.getElementById('pickColor').addEventListener('click', async () => {
   
   if (!window.EyeDropper) {
     console.error('EyeDropper API desteklenmiyor');
-    showToast('EyeDropper API desteklenmiyor. Chrome 95+ kullanın.', true);
+    showToast(translations[currentLanguage].eyedropper_error, true);
     return;
   }
 
@@ -41,7 +82,7 @@ document.getElementById('pickColor').addEventListener('click', async () => {
       console.log('Renk seçimi kullanıcı tarafından iptal edildi');
     } else {
       console.error('Renk seçimi hatası:', error);
-      showToast('Renk seçiminde hata oluştu', true);
+      showToast(translations[currentLanguage].pick_error, true);
     }
   }
 });
@@ -89,14 +130,14 @@ document.getElementById('toggleSize').addEventListener('click', () => {
   if (isMinimized) {
     minimizeIcon.style.display = 'none';
     maximizeIcon.style.display = 'block';
-    toggleBtn.setAttribute('title', 'Büyült');
-    toggleBtn.setAttribute('aria-label', 'Büyült');
+    toggleBtn.setAttribute('title', translations[currentLanguage].maximize);
+    toggleBtn.setAttribute('aria-label', translations[currentLanguage].maximize);
     document.getElementById('historyPanel').style.display = 'none';
   } else {
     minimizeIcon.style.display = 'block';
     maximizeIcon.style.display = 'none';
-    toggleBtn.setAttribute('title', 'Küçült');
-    toggleBtn.setAttribute('aria-label', 'Küçült');
+    toggleBtn.setAttribute('title', translations[currentLanguage].minimize);
+    toggleBtn.setAttribute('aria-label', translations[currentLanguage].minimize);
   }
   console.log(`Popup ${isMinimized ? 'küçültüldü' : 'büyültüldü'}`);
 });
@@ -109,7 +150,7 @@ document.querySelectorAll('.copy-btn').forEach(button => {
     
     navigator.clipboard.writeText(colorCode).then(() => {
       console.log(`Kopyalandı: ${format.toUpperCase()} - ${colorCode}`);
-      showToast(`${format.toUpperCase()} kodu kopyalandı: ${colorCode}`);
+      showToast(`${translations[currentLanguage][`copy_${format}`].replace(' kodunu kopyala', '').replace('Copy', 'Copied')} ${colorCode}`);
       const originalContent = button.innerHTML;
       button.innerHTML = '<span class="material-symbols-outlined">check</span>';
       button.style.color = '#4BB543';
@@ -119,16 +160,16 @@ document.querySelectorAll('.copy-btn').forEach(button => {
       }, 2000);
     }).catch((err) => {
       console.error('Kopyalama hatası:', err);
-      showToast(`${format.toUpperCase()} kopyalama başarısız`, true);
+      showToast(`${translations[currentLanguage][`copy_${format}`].replace(' kodunu kopyala', '').replace('Copy', 'Failed to copy')} ${colorCode}`, true);
     });
   });
 });
 
 function addToHistory(hexColor) {
   if (!colorHistory.includes(hexColor)) {
-    colorHistory.unshift(hexColor); // Yeni rengi başa ekle
+    colorHistory.unshift(hexColor);
     if (colorHistory.length > 16) {
-      colorHistory.pop(); // Maksimum 16 renk
+      colorHistory.pop();
     }
     chrome.storage.local.set({ colorHistory }, () => {
       console.log('Renk geçmişi kaydedildi:', colorHistory);
@@ -139,12 +180,12 @@ function addToHistory(hexColor) {
 
 function updateHistoryGrid() {
   const historyGrid = document.getElementById('historyGrid');
-  historyGrid.innerHTML = ''; // Önceki kutucukları temizle
+  historyGrid.innerHTML = '';
   colorHistory.forEach((color, index) => {
     const colorBox = document.createElement('div');
     colorBox.className = 'history-color';
     colorBox.style.backgroundColor = color;
-    colorBox.setAttribute('aria-label', `Geçmiş renk ${index + 1}: ${color}`);
+    colorBox.setAttribute('aria-label', `${translations[currentLanguage].history_color} ${index + 1}: ${color}`);
     colorBox.setAttribute('tabindex', '0');
     colorBox.addEventListener('click', () => {
       currentColor.hex = color;
