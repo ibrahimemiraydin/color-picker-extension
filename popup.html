@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <title>Renk Seçici | Color Picker</title>
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Fira+Code&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🎨 Renk Seçici</h1>
+      <button id="toggleSize" class="toggle-btn" title="Küçült" aria-label="Küçült">
+        <span class="material-symbols-outlined minimize-icon">fullscreen_exit</span>
+        <span class="material-symbols-outlined maximize-icon" style="display: none;">fullscreen</span>
+      </button>
+    </div>
+    
+    <div class="color-preview-container">
+      <div id="colorDisplay" class="color-display" aria-label="Seçilen renk önizlemesi" role="button" tabindex="0">
+        <span class="material-symbols-outlined click-icon">mouse</span>
+      </div>
+      <div class="history-panel" id="historyPanel" style="display: none;">
+        <div class="history-grid" id="historyGrid"></div>
+      </div>
+      <div class="color-actions">
+        <button id="pickColor" class="pick-btn" tabindex="0" aria-label="Renk seçiciyi başlat">
+          <span class="material-symbols-outlined">colorize</span>
+          Renk Seç
+        </button>
+        <div id="currentHex" class="hex-value" aria-label="Geçerli HEX renk kodu">#FFFFFF</div>
+      </div>
+    </div>
+    
+    <div class="color-formats">
+      <h3 class="section-title">Renk Formatları</h3>
+      <div class="format-grid">
+        <div class="format-item">
+          <label>HEX</label>
+          <div class="code-container">
+            <code id="hexCode" aria-label="HEX renk kodu">#FFFFFF</code>
+            <button class="copy-btn" data-format="hex" title="HEX kodunu kopyala" aria-label="HEX kodunu kopyala">
+              <span class="material-symbols-outlined">content_copy</span>
+            </button>
+          </div>
+        </div>
+        
+        <div class="format-item">
+          <label>RGB</label>
+          <div class="code-container">
+            <code id="rgbCode" aria-label="RGB renk kodu">rgb(255, 255, 255)</code>
+            <button class="copy-btn" data-format="rgb" title="RGB kodunu kopyala" aria-label="RGB kodunu kopyala">
+              <span class="material-symbols-outlined">content_copy</span>
+            </button>
+          </div>
+        </div>
+        
+        <div class="format-item">
+          <label>HSL</label>
+          <div class="code-container">
+            <code id="hslCode" aria-label="HSL renk kodu">hsl(0, 0%, 100%)</code>
+            <button class="copy-btn" data-format="hsl" title="HSL kodunu kopyala" aria-label="HSL kodunu kopyala">
+              <span class="material-symbols-outlined">content_copy</span>
+            </button>
+          </div>
+        </div>
+        
+        <div class="format-item">
+          <label>CMYK</label>
+          <div class="code-container">
+            <code id="cmykCode" aria-label="CMYK renk kodu">cmyk(0%, 0%, 0%, 0%)</code>
+            <button class="copy-btn" data-format="cmyk" title="CMYK kodunu kopyala" aria-label="CMYK kodunu kopyala">
+              <span class="material-symbols-outlined">content_copy</span>
+            </button>
+          </div>
+        </div>
+        
+        <div class="format-item">
+          <label>HWB</label>
+          <div class="code-container">
+            <code id="hwbCode" aria-label="HWB renk kodu">hwb(0, 100%, 0%)</code>
+            <button class="copy-btn" data-format="hwb" title="HWB kodunu kopyala" aria-label="HWB kodunu kopyala">
+              <span class="material-symbols-outlined">content_copy</span>
+            </button>
+          </div>
+        </div>
+        
+        <div class="format-item">
+            <label>LAB</label>
+            <div class="code-container">
+              <code id="labCode" aria-label="LAB renk kodu">lab(100, 0, 0)</code>
+              <button class="copy-btn" data-format="lab" title="LAB kodunu kopyala" aria-label="LAB kodunu kopyala">
+                <span class="material-symbols-outlined">content_copy</span>
+              </button>
+            </div>
+          </div>
+          
+          <div class="format-item">
+            <label>XYZ</label>
+            <div class="code-container">
+              <code id="xyzCode" aria-label="XYZ renk kodu">xyz(95.05, 100, 108.88)</code>
+              <button class="copy-btn" data-format="xyz" title="XYZ kodunu kopyala" aria-label="XYZ kodunu kopyala">
+                <span class="material-symbols-outlined">content_copy</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div id="toast" class="toast" role="alert" aria-live="assertive">Kopyalandı!</div>
+    
+    <script src="popup.js"></script>
+  </body>
+</html>

@@ -1,0 +1,14 @@
+{
+  "manifest_version": 3,
+  "name": "Renk Seçici",
+  "version": "1.0",
+  "description": "Ekran üzerindeki herhangi bir rengin kodunu seçmenizi sağlar.",
+  "permissions": ["storage"],
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "icons": {
+    "48": "icon48.png",
+    "128": "icon128.png"
+  }
+}
